@@ -1,9 +1,8 @@
 "use strict";
 let gameObject = (() => {
     const _choices = ["Rock", "Paper", "Scissors"];
-    // make a version in lowercase for easier matching
     const _choices_lc = _choices.map(_trimAndMakeLowerCase);
-    let   _rules   = new Array;
+    let _rules = new Array;
 
     function _trimAndMakeLowerCase (s) {
         return (typeof s === "string" ? s.trim().toLowerCase() : undefined);
@@ -21,7 +20,8 @@ let gameObject = (() => {
             !(b = _getMatchingChoice(b))) return;
 
         _rules.push(
-            { choice: a, beats: b }
+            { choice: a,
+              beats: b }
         );
     }
 
@@ -41,17 +41,81 @@ let gameObject = (() => {
                     body);
     }
 
+    function _whichChoiceBeatsTheOther(a, b) {
+        /**
+         * Tries to determine a winner out of choices:
+         * @param a - Choice A
+         * @param b - Choice B
+         * @return {number}
+        *          0 - If any of the choices are invalid
+        *              OR if a rule cannot be found.
+        *          1 - If a wins.
+        *          2 - If b wins.
+        *          3 - If it's a draw
+         */
+        
+        if (a === b) return 3;
+
+        let winner = _findWinnerFromMatchingRule(a, b);
+        if (!winner) return 0;
+
+        return (winner === a) ? 1 : 2;
+    }
+
+    function _findWinnerFromMatchingRule(a, b) {
+        for (let i=0; i < _rules.length; ++i) {
+            let r = _rules[i];
+            if (r.choice === a && r.beats === b) return a;
+            if (r.choice === b && r.beats === a) return b;
+        }
+    }
+
+    /**
+     * @typedef {Object} Result
+     * @property {string} outcome - <"Error" | "Victory" | "Defeat" | "Draw"> (from A's POV).
+     * @property {string} winner - The name of the winning choice
+     * @property {string} loser - The name of the losing choice
+     * @property {string} both - The name of the choice picked by both when the outcome is a draw
+     */
+
+    function _getResultsObject(a, b) {
+        /**
+         * Get information about the outcome of choices:
+         * @param a - Choice A
+         * @param b - Choice B
+         * 
+         * Return
+         * @return {Result}
+         *         Information about the outcome
+         */
+        if (!(a = _getMatchingChoice(a)) ||
+            !(b = _getMatchingChoice(b))) return 0;
+        
+        let res = _whichChoiceBeatsTheOther(a, b);
+        
+        if (res === 0) return { outcome: "Error" };
+        if (res === 3) return { outcome: "Draw", both: a };
+
+        return {
+            outcome: res == 1 ? "Victory" : "Defeat",
+            winner:  res == 1 ? a : b,
+            loser:   res == 2 ? a : b
+        }
+    }
+
     return {
         choices: _choices,
         rules:   _rules,
         addRule:    (choiceA, choiceB) => _addRuleChoiceBeatsWhat(choiceA, choiceB),
         printRules: () => _logToConsoleWhichChoiceBeatsWhat(),
+        whoWins:    (choiceA, choiceB) => _getResultsObject(choiceA, choiceB)
     };
 })();
 
 gameObject.addRule("Rock", "Scissors");
 gameObject.addRule("Paper", "Rock");
 gameObject.addRule("Scissors", "Paper");
+gameObject.printRules();
 
 function getComputerChoice(choices) {
     if (Array.isArray(choices))
@@ -59,5 +123,20 @@ function getComputerChoice(choices) {
 }
 
 function playRound(playerSelection, computerSelection) {
-
+    let result = gameObject.whoWins(playerSelection, computerSelection);
+    let msg;
+    switch (result.outcome) {
+        case "Draw":
+            msg = "It's a draw! (Both chose " + result.both + ")";
+            break;
+        case "Victory":
+            msg = "You win! " + result.winner + " beats " + result.loser + ".";
+            break;
+        case "Defeat":
+            msg = "You lose! " + result.winner + " beats " + result.loser + ".";
+            break;
+        default:
+            msg = "Invalid input: Please review the rules.";
+    }
+    console.log(" -> " + msg);
 }
