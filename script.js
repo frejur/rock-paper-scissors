@@ -139,4 +139,40 @@ function playRound(playerSelection, computerSelection) {
             msg = "Invalid input: Please review the rules.";
     }
     console.log(" -> " + msg);
+    return result.outcome;
+}
+
+function game(rounds) {
+    if (typeof rounds !== "number")
+        rounds = 5;
+    else
+        rounds = Math.max(1, Math.min(rounds, 20));
+    let scorePlayer = 0, scoreComputer = 0;
+    for (let r=1; r <= rounds; ++r) {
+        let playerSelection = prompt("Round " + r + ": Choose your weapon!");
+        if (playerSelection === null) break;
+        let result = playRound(playerSelection, getComputerChoice(gameObject.choices));
+        switch (result) {
+            case "Draw":
+                continue;
+            case "Victory":
+                ++scorePlayer;
+                break;
+            case "Defeat":
+                ++scoreComputer;
+                break;
+            default:
+                --r; // Most likely faulty input, keep trying
+        }
+    }
+    let headline;
+    if (scorePlayer === scoreComputer)
+        headline = "It's a Draw!";
+    else if (scorePlayer > scoreComputer)
+        headline = "Victory!";
+    else
+        headline = "You were defeated.";
+    console.log(headline + '\n' +
+                "You: " + scorePlayer + " point(s) | " +
+                "Opponent: " + scoreComputer + " point(s)");
 }
