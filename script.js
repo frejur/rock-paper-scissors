@@ -147,6 +147,7 @@ function game(rounds) {
         rounds = 5;
     else
         rounds = Math.max(1, Math.min(rounds, 20));
+
     let scorePlayer = 0, scoreComputer = 0;
     for (let r=1; r <= rounds; ++r) {
         let playerSelection = prompt("Round " + r + ": Choose your weapon!");
@@ -176,3 +177,9 @@ function game(rounds) {
                 "You: " + scorePlayer + " point(s) | " +
                 "Opponent: " + scoreComputer + " point(s)");
 }
+
+const btns = document.querySelectorAll("button.player-select");
+btns.forEach( btn => {
+    btn.addEventListener("click", () => playRound(btn.getAttribute("data-selection"),
+                                                  getComputerChoice(gameObject.choices)) );
+});
