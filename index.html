@@ -6,12 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="script.js" defer></script>
     <title>Rock Paper Scissors</title>
-    <div id="content">
+    <div id="control">
         <center>
             <button class="player-select" data-selection="rock">Rock</button>
             <button class="player-select" data-selection="paper">Paper</button>
             <button class="player-select" data-selection="scissors">Scissors</button>
         </center>
+    </div>
+
+    <div id="result">
+        <div class="content" id="new-game">
+            <h2>Select your weapon above!</h2>
+        </div>
+        <div class="content" id="score-board"></div>
+        <div class="content" id="game-over"></div>
     </div>
 </head>
 <body>
