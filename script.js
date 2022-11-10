@@ -4,8 +4,7 @@ let gameObject = (() => {
     const _choices_lc = _choices.map(_trimAndMakeLowerCase);
     let _rules = new Array;
     const _score = {
-        "playerOne": 0,
-        "playerTwo": 0
+        "playerOne": 0, "playerTwo": 0
     };
     let _isActive = false;
 
@@ -132,15 +131,16 @@ let gameObject = (() => {
         choices:  _choices,
         rules:    _rules,
         score:    _score,
-        isActive: _isActive,
         addRule:    (choiceA, choiceB) => _addRuleChoiceBeatsWhat(choiceA, choiceB),
         printRules: () => _logToConsoleWhichChoiceBeatsWhat(),
         whoWins:    (choiceA, choiceB) => _getResultsObject(choiceA, choiceB),
-        newGame: () => {
+        newGame: function () {
             _setPlayerScoresToZero();
-            activateGame();
+            _activateGame();
         },
-        addPoint:   (player) => _addPointToPlayerScore(player)
+        addPoint:   (player) => _addPointToPlayerScore(player),
+        isActive: () => { return _isActive; },
+        deactivateGame: _deactivateGame()
     };
 })();
 
@@ -164,7 +164,7 @@ function getComputerChoice(choices) {
 }
 
 function processPlayerInput(playerInput) {
-    if (!gameObject.isActive) return;
+    if (!gameObject.isActive()) return;
     playRound(playerInput, getComputerChoice(gameObject.choices));
     updateResult();
 }
@@ -199,6 +199,7 @@ function updateResult() {
 }
 
 function announceWinner(winner) {
+    gameObject.deactivateGame();
     console.log("Winner: " + winner);
 }
 
@@ -208,6 +209,7 @@ function updateScoreBoard(playerScore, opponentScore) {
 
 function newGame() {
     resultDOM.newGame.classList.remove("hidden");
+    gameObject.newGame();
 }
 
 const btns = document.querySelectorAll("button.player-select");
