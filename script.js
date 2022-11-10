@@ -3,6 +3,21 @@ let gameObject = (() => {
     const _choices = ["Rock", "Paper", "Scissors"];
     const _choices_lc = _choices.map(_trimAndMakeLowerCase);
     let _rules = new Array;
+    const _score = {
+        "playerOne": 0,
+        "playerTwo": 0
+    };
+
+    function _setPlayerScoresToZero() {
+        _score.playerOne = 0, _score.playerTwo = 0;
+    }
+
+    function _addPointToPlayerScore(player) {
+        if (typeof player !== "number") return;
+        let pkey = "player" +
+                   ((Math.max(Math.min(2, player), 0) === 1) ? "One" : "Two");
+        ++_score[pkey];
+    }
 
     function _trimAndMakeLowerCase (s) {
         return (typeof s === "string" ? s.trim().toLowerCase() : undefined);
@@ -106,9 +121,12 @@ let gameObject = (() => {
     return {
         choices: _choices,
         rules:   _rules,
+        score:   _score,
         addRule:    (choiceA, choiceB) => _addRuleChoiceBeatsWhat(choiceA, choiceB),
         printRules: () => _logToConsoleWhichChoiceBeatsWhat(),
-        whoWins:    (choiceA, choiceB) => _getResultsObject(choiceA, choiceB)
+        whoWins:    (choiceA, choiceB) => _getResultsObject(choiceA, choiceB),
+        resetScore: () => _setPlayerScoresToZero(),
+        addPoint:   (player) => _addPointToPlayerScore(player)
     };
 })();
 
