@@ -50,6 +50,10 @@ button {
     gap: 5px
 }
 
+button.game-select {
+    margin: 0 auto;
+}
+
 .icon {
     font-size: 24px;
 }
