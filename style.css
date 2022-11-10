@@ -88,6 +88,6 @@ table.score-board-table {
     width: 200px;
 }
 
-table.score-board-table>th {
+table.score-board-table th {
     width: 50%;
 }
