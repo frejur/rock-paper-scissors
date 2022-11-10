@@ -1,5 +1,5 @@
 "use strict";
-let gameObject = (() => {
+let gameObject = function () {
     const _choices = ["Rock", "Paper", "Scissors"];
     const _choices_lc = _choices.map(_trimAndMakeLowerCase);
     let _rules = new Array;
@@ -142,7 +142,7 @@ let gameObject = (() => {
         isActive: () => { return _isActive; },
         deactivateGame: _deactivateGame
     };
-})();
+}();
 
 gameObject.addRule("Rock", "Scissors");
 gameObject.addRule("Paper", "Rock");
@@ -154,11 +154,20 @@ let resultDOM = function () {
     let _newGame = document.getElementById("new-game");
     let _scoreBoard = document.getElementById("score-board");
     let _gameOver = document.getElementById("game-over");
+    let _playerScore = document.getElementById("player-score");
+    let _opponentScore = document.getElementById("opponent-score");
+    let _roundOutcome = document.getElementById("round-outcome");
+    let _gameOutcome = document.getElementById("game-outcome");
+
     return {
         root: _root,
         newGame: _newGame,
         scoreBoard: _scoreBoard,
-        gameOver: _gameOver
+        gameOver: _gameOver,
+        playerScore: _playerScore,
+        opponentScore: _opponentScore,
+        gameOutcome: _gameOutcome,
+        roundOutcome: _roundOutcome
     };
 }();
 
@@ -173,8 +182,8 @@ function processPlayerInput(playerInput) {
             newGame();
         }
     } else {
-        playRound(playerInput, getComputerChoice(gameObject.choices));
-        updateResult();
+        let msg = playRound(playerInput, getComputerChoice(gameObject.choices));
+        updateResult(msg);
     }
 }
 
@@ -199,27 +208,33 @@ function playRound(playerSelection, computerSelection) {
     return msg;
 }
 
-function updateResult() {
+function updateResult(message) {
     if (!(resultDOM.newGame.classList.contains("hidden")))
         resultDOM.newGame.classList.add("hidden");
     if (resultDOM.scoreBoard.classList.contains("hidden"))
         resultDOM.scoreBoard.classList.remove("hidden");
     let r = gameObject.score;
     if (r.playerOne + r.playerTwo >= 5)
-        announceWinner( (r.playerOne > r.playerTwo ? 1 : 2) );
-    else
-        updateScoreBoard(r.playerOne, r.playerTwo)
+        announceWinner( (r.playerOne > r.playerTwo ? 1 : 2),
+                        message );
+    updateScoreBoard(r.playerOne, r.playerTwo, message)
 }
 
 function announceWinner(winner) {
     gameObject.deactivateGame();
     resultDOM.gameOver.classList.remove("hidden");
     resultDOM.scoreBoard.classList.add("hidden");
-    console.log("Winner: " + winner);
+    resultDOM.gameOutcome.innerText = (winner === 1) ?
+                                      "Congratulations, you won!" :
+                                      "You have been defeated.";
 }
 
-function updateScoreBoard(playerScore, opponentScore) {
-    console.log("Score: " + playerScore + " | " + opponentScore);
+function updateScoreBoard(playerScore, opponentScore, message) {
+    resultDOM.playerScore.innerText = playerScore;
+    resultDOM.opponentScore.innerText = opponentScore;
+    if (resultDOM.roundOutcome.classList.contains("hidden"))
+        resultDOM.roundOutcome.classList.remove("hidden");
+    resultDOM.roundOutcome.innerText = message;
 }
 
 function newGame() {
