@@ -74,6 +74,9 @@ button.game-select {
 
 #round-outcome {
     width: 100%;
+    font-size: 20px;
+    color: #cecece;
+    margin: 0;
 }
 
 .hidden {

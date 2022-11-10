@@ -241,6 +241,7 @@ function newGame() {
     resultDOM.newGame.classList.remove("hidden");
     resultDOM.scoreBoard.classList.add("hidden");
     resultDOM.gameOver.classList.add("hidden");
+    resultDOM.roundOutcome.classList.add("hidden");
     gameObject.newGame();
 }
 
