@@ -11,30 +11,33 @@ body {
     align-items: center;
     justify-content: center;
     background-color: rgb(146, 135, 120);
-    background-image: url("hands-bg.jpg");
+    background-image: url("hands-bg-edit.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-blend-mode: multiply;
-    background-position: center;
+    background-position: left center;
+    color:rgb(255, 255, 255);
 }
+
 
 .bg {
     position: absolute;
     height: 100%;
     width: 100%;
     z-index: -1;
-    background: radial-gradient(rgba(0,0,0,0), rgb(20, 18, 16));
+    background: radial-gradient(rgba(255, 255, 255, 0.259), rgb(20, 18, 16));
 }
 
 button {
     text-transform:uppercase;
     padding: 8px 18px;
     font-weight: bold;
-    background-color: rgb(155, 117, 62);
+    background-color: rgb(35, 25, 17);
     color: white;
     border: 0;
     border-radius: 15px;
     font-size: 19px;
+    margin: 0 15px;
 }
 
 #result {
@@ -45,6 +48,7 @@ button {
     box-shadow: inset 0px 0px 65px rgba(0,0,0,0.9);
     min-height: 200px;
     margin-top: 37px;
+    background-color: rgba(0,0,0,0.5);
 }
 
 .hidden {
