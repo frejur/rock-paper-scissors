@@ -9,13 +9,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Rock Paper Scissors</h1>
+    <div class="bg"></div>
     <div id="control">
-        <center>
-            <button class="player-select" data-selection="rock">Rock</button>
-            <button class="player-select" data-selection="paper">Paper</button>
-            <button class="player-select" data-selection="scissors">Scissors</button>
-        </center>
+        <button class="player-select" data-selection="rock">&#129704; Rock</button>
+        <button class="player-select" data-selection="paper">&#9995; Paper</button>
+        <button class="player-select" data-selection="scissors">&#9988; Scissors</button>
     </div>
 
     <div id="result">
@@ -24,6 +22,16 @@
         </div>
         <div class="content hidden" id="score-board">
             <h2>Score Board</h2>
+            <table class="score-board-table">
+                <tr>
+                    <th>You</th>
+                    <th>Opponent</th>
+                </tr>
+                <tr>
+                    <td id="player-one-score">0</td>
+                    <td id="player-two-score">0</td>
+                </tr>
+            </table>
         </div>
         <div class="content hidden" id="game-over">
             <h2 id="game-outcome"></h2>
