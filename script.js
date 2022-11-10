@@ -149,6 +149,15 @@ gameObject.addRule("Paper", "Rock");
 gameObject.addRule("Scissors", "Paper");
 gameObject.printRules();
 
+let resultDOM = function () {
+    let _root = document.getElementById("result");
+    let _newGame = document.getElementById("new-game");
+    return {
+        root: _root,
+        newGame: _newGame
+    };
+}();
+
 function getComputerChoice(choices) {
     if (Array.isArray(choices))
         return choices[Math.floor(Math.random() * choices.length)];
@@ -197,7 +206,12 @@ function updateScoreBoard(playerScore, opponentScore) {
     console.log("Score: " + playerScore + " | " + opponentScore);
 }
 
+function newGame() {
+    resultDOM.newGame.classList.remove("hidden");
+}
+
 const btns = document.querySelectorAll("button.player-select");
 btns.forEach( btn => {
     btn.addEventListener("click", () => processPlayerInput(btn.getAttribute("data-selection")));
 });
+newGame();
