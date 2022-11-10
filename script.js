@@ -7,12 +7,22 @@ let gameObject = (() => {
         "playerOne": 0,
         "playerTwo": 0
     };
+    let _isActive = false;
 
     function _setPlayerScoresToZero() {
         _score.playerOne = 0, _score.playerTwo = 0;
     }
 
+    function _activateGame() {
+        _isActive = true;
+    }
+
+    function _deactivateGame() {
+        _isActive = false;
+    }
+
     function _addPointToPlayerScore(player) {
+        if (!_isActive) return;
         if (typeof player !== "number") return;
         let pkey = "player" +
                    ((Math.max(Math.min(2, player), 0) === 1) ? "One" : "Two");
@@ -119,13 +129,17 @@ let gameObject = (() => {
     }
 
     return {
-        choices: _choices,
-        rules:   _rules,
-        score:   _score,
+        choices:  _choices,
+        rules:    _rules,
+        score:    _score,
+        isActive: _isActive,
         addRule:    (choiceA, choiceB) => _addRuleChoiceBeatsWhat(choiceA, choiceB),
         printRules: () => _logToConsoleWhichChoiceBeatsWhat(),
         whoWins:    (choiceA, choiceB) => _getResultsObject(choiceA, choiceB),
-        resetScore: () => _setPlayerScoresToZero(),
+        newGame: () => {
+            _setPlayerScoresToZero();
+            activateGame();
+        },
         addPoint:   (player) => _addPointToPlayerScore(player)
     };
 })();
@@ -140,6 +154,12 @@ function getComputerChoice(choices) {
         return choices[Math.floor(Math.random() * choices.length)];
 }
 
+function processPlayerInput(playerInput) {
+    if (!gameObject.isActive) return;
+    playRound(playerInput, getComputerChoice(gameObject.choices));
+    updateResult();
+}
+
 function playRound(playerSelection, computerSelection) {
     let result = gameObject.whoWins(playerSelection, computerSelection);
     let msg;
@@ -148,56 +168,36 @@ function playRound(playerSelection, computerSelection) {
             msg = "It's a draw! (Both chose " + result.both + ")";
             break;
         case "Victory":
+            gameObject.addPoint(1);
             msg = "You win! " + result.winner + " beats " + result.loser + ".";
             break;
         case "Defeat":
+            gameObject.addPoint(2);
             msg = "You lose! " + result.winner + " beats " + result.loser + ".";
             break;
         default:
             msg = "Invalid input: Please review the rules.";
     }
-    console.log(" -> " + msg);
-    return result.outcome;
+    return msg;
 }
 
-function game(rounds) {
-    if (typeof rounds !== "number")
-        rounds = 5;
+function updateResult() {
+    let r = gameObject.score;
+    if (r.playerOne + r.playerTwo >= 5)
+        announceWinner( (r.playerOne > r.playerTwo ? 1 : 2) );
     else
-        rounds = Math.max(1, Math.min(rounds, 20));
+        updateScoreBoard(r.playerOne, r.playerTwo)
+}
 
-    let scorePlayer = 0, scoreComputer = 0;
-    for (let r=1; r <= rounds; ++r) {
-        let playerSelection = prompt("Round " + r + ": Choose your weapon!");
-        if (playerSelection === null) break;
-        let result = playRound(playerSelection, getComputerChoice(gameObject.choices));
-        switch (result) {
-            case "Draw":
-                continue;
-            case "Victory":
-                ++scorePlayer;
-                break;
-            case "Defeat":
-                ++scoreComputer;
-                break;
-            default:
-                --r; // Most likely faulty input, keep trying
-        }
-    }
-    let headline;
-    if (scorePlayer === scoreComputer)
-        headline = "It's a Draw!";
-    else if (scorePlayer > scoreComputer)
-        headline = "Victory!";
-    else
-        headline = "You were defeated.";
-    console.log(headline + '\n' +
-                "You: " + scorePlayer + " point(s) | " +
-                "Opponent: " + scoreComputer + " point(s)");
+function announceWinner(winner) {
+    console.log("Winner: " + winner);
+}
+
+function updateScoreBoard(playerScore, opponentScore) {
+    console.log("Score: " + playerScore + " | " + opponentScore);
 }
 
 const btns = document.querySelectorAll("button.player-select");
 btns.forEach( btn => {
-    btn.addEventListener("click", () => playRound(btn.getAttribute("data-selection"),
-                                                  getComputerChoice(gameObject.choices)) );
+    btn.addEventListener("click", () => processPlayerInput(btn.getAttribute("data-selection")));
 });
