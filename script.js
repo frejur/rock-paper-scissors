@@ -158,6 +158,7 @@ let resultDOM = function () {
     let _opponentScore = document.getElementById("opponent-score");
     let _roundOutcome = document.getElementById("round-outcome");
     let _gameOutcome = document.getElementById("game-outcome");
+    let _finalScore = document.getElementById("final-score");
 
     return {
         root: _root,
@@ -167,7 +168,8 @@ let resultDOM = function () {
         playerScore: _playerScore,
         opponentScore: _opponentScore,
         gameOutcome: _gameOutcome,
-        roundOutcome: _roundOutcome
+        roundOutcome: _roundOutcome,
+        finalScore: _finalScore
     };
 }();
 
@@ -224,6 +226,8 @@ function announceWinner(winner) {
     gameObject.deactivateGame();
     resultDOM.gameOver.classList.remove("hidden");
     resultDOM.scoreBoard.classList.add("hidden");
+    resultDOM.finalScore.innerText = "Final score: " + gameObject.score.playerOne +
+                                     " vs " + gameObject.score.playerTwo;
     resultDOM.gameOutcome.innerText = (winner === 1) ?
                                       "Congratulations, you won!" :
                                       "You have been defeated.";
