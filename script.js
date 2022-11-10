@@ -140,7 +140,7 @@ let gameObject = (() => {
         },
         addPoint:   (player) => _addPointToPlayerScore(player),
         isActive: () => { return _isActive; },
-        deactivateGame: _deactivateGame()
+        deactivateGame: _deactivateGame
     };
 })();
 
@@ -152,9 +152,13 @@ gameObject.printRules();
 let resultDOM = function () {
     let _root = document.getElementById("result");
     let _newGame = document.getElementById("new-game");
+    let _scoreBoard = document.getElementById("score-board");
+    let _gameOver = document.getElementById("game-over");
     return {
         root: _root,
-        newGame: _newGame
+        newGame: _newGame,
+        scoreBoard: _scoreBoard,
+        gameOver: _gameOver
     };
 }();
 
@@ -191,6 +195,10 @@ function playRound(playerSelection, computerSelection) {
 }
 
 function updateResult() {
+    if (!(resultDOM.newGame.classList.contains("hidden")))
+        resultDOM.newGame.classList.add("hidden");
+    if (resultDOM.scoreBoard.classList.contains("hidden"))
+        resultDOM.scoreBoard.classList.remove("hidden");
     let r = gameObject.score;
     if (r.playerOne + r.playerTwo >= 5)
         announceWinner( (r.playerOne > r.playerTwo ? 1 : 2) );
@@ -200,6 +208,8 @@ function updateResult() {
 
 function announceWinner(winner) {
     gameObject.deactivateGame();
+    resultDOM.gameOver.classList.remove("hidden");
+    resultDOM.scoreBoard.classList.add("hidden");
     console.log("Winner: " + winner);
 }
 
@@ -209,6 +219,8 @@ function updateScoreBoard(playerScore, opponentScore) {
 
 function newGame() {
     resultDOM.newGame.classList.remove("hidden");
+    resultDOM.scoreBoard.classList.add("hidden");
+    resultDOM.gameOver.classList.add("hidden");
     gameObject.newGame();
 }
 
