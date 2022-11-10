@@ -28,6 +28,12 @@ body {
     background: radial-gradient(rgba(255, 255, 255, 0.259), rgb(20, 18, 16));
 }
 
+#control {
+    display: flex;
+    justify-content: space-between;
+    gap: 7px;
+}
+
 button {
     text-transform:uppercase;
     padding: 8px 18px;
@@ -36,8 +42,16 @@ button {
     color: white;
     border: 0;
     border-radius: 15px;
-    font-size: 19px;
+    font-size: 14px;
     margin: 0 15px;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 5px
+}
+
+.icon {
+    font-size: 24px;
 }
 
 #result {
@@ -49,6 +63,8 @@ button {
     min-height: 200px;
     margin-top: 37px;
     background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
 }
 
 .hidden {

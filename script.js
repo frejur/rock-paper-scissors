@@ -168,9 +168,14 @@ function getComputerChoice(choices) {
 }
 
 function processPlayerInput(playerInput) {
-    if (!gameObject.isActive()) return;
-    playRound(playerInput, getComputerChoice(gameObject.choices));
-    updateResult();
+    if (!gameObject.isActive()) {
+        if (playerInput === "newGame") {
+            newGame();
+        }
+    } else {
+        playRound(playerInput, getComputerChoice(gameObject.choices));
+        updateResult();
+    }
 }
 
 function playRound(playerSelection, computerSelection) {
@@ -224,7 +229,7 @@ function newGame() {
     gameObject.newGame();
 }
 
-const btns = document.querySelectorAll("button.player-select");
+const btns = document.querySelectorAll("button");
 btns.forEach( btn => {
     btn.addEventListener("click", () => processPlayerInput(btn.getAttribute("data-selection")));
 });
